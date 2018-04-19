@@ -115,11 +115,11 @@ function randomKey (dictionary) {
   return keys[keys.length * Math.random() << 0]
 }
 
-const goAheadAndShowTheAd = (windowId, categoryName, notificationText, notificationUrl) => {
+const goAheadAndShowTheAd = (windowId, notificationTitle, notificationText, notificationUrl) => {
   appActions.nativeNotificationCreate(
     windowId,
     {
-      title: categoryName,
+      title: notificationTitle,
       message: notificationText,
       sound: true,
       timeout: 60,
@@ -201,8 +201,10 @@ const basicCheckReadyAdServe = (state, windowId) => {
 
   let bundle = sampleAdFeed
   let arbitraryKey
+
   let notificationText
   let notificationUrl
+  let advertiser
 
   let allGood = true
 
@@ -216,13 +218,14 @@ const basicCheckReadyAdServe = (state, windowId) => {
       if (payload) {
         notificationText = payload['notificationText']
         notificationUrl = payload['notificationURL']
+        advertiser = payload['advertiser']
       } else {
         console.warn('BAT Ads: Could not read ad data for display.')
       }
     }
   }
 
-  if (!notificationText || !notificationUrl) {
+  if (!notificationText || !notificationUrl || !advertiser) {
     allGood = false
   }
 
@@ -232,8 +235,8 @@ const basicCheckReadyAdServe = (state, windowId) => {
   }
 
   if (allGood) {
-    goAheadAndShowTheAd(windowId, winnerOverTime, notificationText, notificationUrl)
-    appActions.onUserModelLog('Ad shown', {notificationUrl, notificationText, winnerOverTime})
+    goAheadAndShowTheAd(windowId, advertiser, notificationText, notificationUrl)
+    appActions.onUserModelLog('Ad shown', {notificationUrl, notificationText, winnerOverTime, advertiser})
     state = userModelState.appendAdShownToAdHistory(state)
   }
 
