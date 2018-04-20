@@ -4,6 +4,7 @@
 
 'use strict'
 const um = require('@brave-intl/bat-usermodel')
+const path = require('path')
 
 // Actions
 const appActions = require('../../../js/actions/appActions')
@@ -121,6 +122,7 @@ const goAheadAndShowTheAd = (windowId, notificationTitle, notificationText, noti
     {
       title: notificationTitle,
       message: notificationText,
+      icon: path.join(__dirname, '../../../img/BAT_icon.png'),
       sound: true,
       timeout: 60,
       wait: true,
